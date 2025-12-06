@@ -1,0 +1,62 @@
+#FOR OSCILLATING LED BRIGHTNESS WITH NOISE
+import matplotlib.pyplot as plt
+import pandas as pd
+file_path = "/Users/jacobjoseph/Downloads/Lab #6 Data 3.csv"
+df = pd.read_csv(file_path, header=None, names=['t_ms', 'A_0'])
+t_ms = df['t_ms'].values
+A_0 = df['A_0'].values
+t_s = t_ms/1000
+
+
+fig,ax = plt.subplots()
+ax.plot(t_s, A_0)
+ax.set_xlabel('Time')
+ax.set_ylabel('Brightness')
+ax.set_xlim(1,3)
+ax.set_ylim(40,110)
+plt.show()
+
+#COMPARISON OF 3 AVERAGING LINES
+import matplotlib.pyplot as plt
+import pandas as pd
+
+file_path = "/Users/jacobjoseph/Downloads/Lab #6 Data.csv"
+df = pd.read_csv(file_path, header=None, names=['t_ms', 'avg1', 'avg2', 'avg3'])
+
+t_ms = df['t_ms'].values
+avg1 = df['avg1'].values
+avg2 = df['avg2'].values
+avg3 = df['avg3'].values
+t_s  = t_ms / 1000.0
+
+fig, ax = plt.subplots()
+ax.plot(t_s, avg1,  label='avg = 1')
+ax.plot(t_s, avg2, label='avg = 5')
+ax.plot(t_s, avg3, label='avg = 10')
+
+ax.set_xlabel('Time')
+ax.set_ylabel('Brightness)
+ax.set_xlim(1, 3)
+ax.set_ylim(25,135)
+ax.legend()         
+plt.show()
+
+#FOR VERY SMALL SIGNAL DETECTION
+
+import matplotlib.pyplot as plt
+import pandas as pd
+file_path = "/Users/jacobjoseph/Downloads/Lab #6 Data 2.csv"
+df = pd.read_csv(file_path, header=None, names=['t_ms', 'A_0'])
+t_ms = df['t_ms'].values
+A_0 = df['A_0'].values
+t_s = t_ms/1000
+
+
+fig,ax = plt.subplots()
+ax.plot(t_s, A_0)
+ax.set_xlabel('Time')
+ax.set_ylabel('Brightness')
+ax.set_xlim(2.5,7.5)
+ax.set_yim(70,78)
+plt.show()
+
