@@ -1,0 +1,175 @@
+//FOR OSCILLATING LED BRIGHTNESS WITH NOISE
+
+int brightness = 0;
+int sensorValue = 0;
+const int ledPin = 10;
+const float TWOPI = 2 * 3.1415926;
+const int inputPin = A0;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+
+void loop() {
+  float floatBrightness = 100 + 50* sin(1.0 * TWOPI * millis() / 1000.0);
+  brightness = (int)floatBrightness;
+  analogWrite(ledPin, brightness);
+  
+  sensorValue = analogRead(inputPin);
+
+
+  Serial.print(millis());
+  Serial.print(',');
+  Serial.println(sensorValue);
+
+  
+  delay(5);
+}
+
+//COMPARISON OF 3 AVERAGING LINES
+const int numReadings1 = 1; 
+const int numReadings5 = 5;
+const int numReadings10 = 10;
+
+int readings1[numReadings1];
+int readings5[numReadings5];
+int readings10[numReadings10];
+
+int readIndex1 = 0, readIndex5 = 0, readIndex10 = 0;
+int total1 = 0, total5 = 0, total10 = 0;
+
+int average1 = 0, average5 = 0, average10 = 0;
+int brightness = 0;
+int sensorValue = 0;
+const int ledPin = 10;
+const float TWOPI = 2 * 3.1415926;
+const int inputPin = A0;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);
+  
+  
+  for (int thisReading = 0; thisReading < numReadings1; thisReading++) {
+    readings1[thisReading] = 0;
+  }
+  for (int thisReading = 0; thisReading < numReadings5; thisReading++) {
+    readings5[thisReading] = 0;
+  }
+  for (int thisReading = 0; thisReading < numReadings10; thisReading++) {
+    readings10[thisReading] = 0;
+  }
+}
+
+void loop() {
+
+  float floatBrightness = 100 + 50 * sin(1.0 * TWOPI * millis() / 1000.0);
+  brightness = (int)floatBrightness;
+  analogWrite(ledPin, brightness);
+  
+
+  sensorValue = analogRead(inputPin);
+  
+
+  total1 = total1 - readings1[readIndex1];
+  readings1[readIndex1] = sensorValue;
+  total1 = total1 + readings1[readIndex1];
+  readIndex1 = readIndex1 + 1;
+  if (readIndex1 >= numReadings1) {
+    readIndex1 = 0;
+  }
+  average1 = total1 / numReadings1;
+  
+
+  total5 = total5 - readings5[readIndex5];
+  readings5[readIndex5] = sensorValue;
+  total5 = total5 + readings5[readIndex5];
+  readIndex5 = readIndex5 + 1;
+  if (readIndex5 >= numReadings5) {
+    readIndex5 = 0;
+  }
+  average5 = total5 / numReadings5;
+  
+
+  total10 = total10 - readings10[readIndex10];
+  readings10[readIndex10] = sensorValue;
+  total10 = total10 + readings10[readIndex10];
+  readIndex10 = readIndex10 + 1;
+  if (readIndex10 >= numReadings10) {
+    readIndex10 = 0;
+  }
+  average10 = total10 / numReadings10;
+  
+  
+  Serial.print(millis());
+  Serial.print(',');
+  Serial.print(average1);
+  Serial.print(',');
+  Serial.print(average5);
+  Serial.print(',');
+  Serial.println(average10);
+  
+  delay(5);
+}
+
+//FOR VERY SMALL SIGNAL DETECTION
+
+
+const int numReadings = 200;
+
+int readings[numReadings];  // the readings from the analog input
+int readIndex = 0;          // the index of the current reading
+long total = 0;             // the running total (use long for safety)
+int average = 0;            // the average
+
+
+const int ledPin = 10;
+const float TWOPI = 2 * 3.1415926;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);
+
+
+  for (int thisReading = 0; thisReading < numReadings; thisReading++) {
+    readings[thisReading] = 0;
+  }
+}
+
+void loop() {
+  unsigned long t = millis();
+
+
+  float floatBrightness = 100.0 + 5* sin(1.0 * TWOPI * t / 1000.0);
+  int brightness = (int)floatBrightness;  // cast to int for analogWrite
+  analogWrite(ledPin, brightness);
+
+
+  total -= readings[readIndex];
+
+
+  int newReading = analogRead(A0);
+  readings[readIndex] = newReading;
+
+
+  total += readings[readIndex];
+
+ 
+  readIndex++;
+  if (readIndex >= numReadings) {
+    readIndex = 0;
+  }
+
+  
+  average = total / numReadings;
+
+
+  Serial.print(t);
+  Serial.print(',');
+  Serial.println(average);
+
+  delay(5);
+}
+
